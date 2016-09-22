@@ -61,16 +61,25 @@ class Actionschronopost
 	 */
 	function doActions($parameters, &$object, &$action, $hookmanager)
 	{
-		$error = 0; // Error counter
-		$myvalue = 'test'; // A result value
-
-		print_r($parameters);
-		echo "action: " . $action;
-		print_r($object);
-
-		if (in_array('somecontext', explode(':', $parameters['context'])))
+		global $conf;
+		if (in_array('expeditioncard', explode(':', $parameters['context'])))
 		{
-		  // do something only for the context 'somecontext'
+			if($object->statut == 1) { // Validé
+				
+				dol_include_once('/chronopost/class/chronopost.class.php');
+				
+				$chronopost = new Chronopost($conf->global->CHRONOPOST_FTP_HOST, $conf->global->CHRONOPOST_FTP_LOGIN, $conf->global->CHRONOPOST_FTP_PASSWORD, $conf->global->CHRONOPOST_FTP_PORT);
+				
+				$conn = $chronopost->connect();
+				$res = $chronopost->login($conn);
+				
+				if($res > 0) {
+					
+					//$chronopost->generate_file_to_send('expedition_'.date('YmdHis'), $object);
+					
+				}
+				
+			}
 		}
 
 		if (! $error)

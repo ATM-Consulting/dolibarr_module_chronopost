@@ -46,18 +46,16 @@ $action = GETPOST('action', 'alpha');
 /*
  * Actions
  */
-if (preg_match('/set_(.*)/',$action,$reg))
-{
-	$code=$reg[1];
-	if (dolibarr_set_const($db, $code, GETPOST($code), 'chaine', 0, '', $conf->entity) > 0)
-	{
-		header("Location: ".$_SERVER["PHP_SELF"]);
-		exit;
+if ($action === 'set_chronopost_host_infos') {
+	
+	foreach($_REQUEST['TConst'] as $code=>$value) {
+		dolibarr_set_const($db, $code, $value, 'chaine', 0, '', $conf->entity);
 	}
-	else
-	{
-		dol_print_error($db);
-	}
+	
+	setEventMessage('ChronopostFTPInfosCorrectlySaved');
+	header("Location: ".$_SERVER["PHP_SELF"]);
+	exit;
+	
 }
 	
 if (preg_match('/del_(.*)/',$action,$reg))
@@ -98,36 +96,56 @@ dol_fiche_head(
 // Setup page goes here
 $form=new Form($db);
 $var=false;
+
+print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="set_chronopost_host_infos">';
+
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre">';
 print '<td>'.$langs->trans("Parameters").'</td>'."\n";
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
 
-
-// Example with a yes / no select
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("ParamLabel").'</td>';
+print '<td>'.$langs->trans("ChronopostFTPHost").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="300">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-print '<input type="hidden" name="action" value="set_CONSTNAME">';
-print $form->selectyesno("CONSTNAME",$conf->global->CONSTNAME,1);
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
+print '<input type="text" name="TConst[CHRONOPOST_FTP_HOST]" value="'.$conf->global->CHRONOPOST_FTP_HOST.'" />';
 print '</td></tr>';
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("ParamLabel").'</td>';
+print '<td>'.$langs->trans("ChronopostFTPLogin").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="center" width="300">';
-print ajax_constantonoff('CONSTNAME');
+print '<td align="right" width="300">';
+print '<input type="text" name="TConst[CHRONOPOST_FTP_LOGIN]" value="'.$conf->global->CHRONOPOST_FTP_LOGIN.'" />';
+print '</td></tr>';
+
+$var=!$var;
+print '<tr '.$bc[$var].'>';
+print '<td>'.$langs->trans("ChronopostFTPPassword").'</td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="right" width="300">';
+print '<input type="password" name="TConst[CHRONOPOST_FTP_PASSWORD]" value="'.$conf->global->CHRONOPOST_FTP_PASSWORD.'" />';
+print '</td></tr>';
+
+$var=!$var;
+print '<tr '.$bc[$var].'>';
+print '<td>'.$langs->trans("ChronopostFTPPort").'</td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="right" width="300">';
+print '<input type="text" name="TConst[CHRONOPOST_FTP_PORT]" value="'.$conf->global->CHRONOPOST_FTP_PORT.'" />';
 print '</td></tr>';
 
 print '</table>';
+
+print '<div class="tabsAction">';
+print '<input class="butAction" type="SUBMIT" name="btSave" value="'.$langs->trans('Save').'" />';
+print '</div>';
+
+print '</form>';
 
 llxFooter();
 
