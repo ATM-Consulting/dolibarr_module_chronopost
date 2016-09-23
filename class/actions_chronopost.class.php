@@ -61,25 +61,28 @@ class Actionschronopost
 	 */
 	function doActions($parameters, &$object, &$action, $hookmanager)
 	{
-		global $conf;
+		global $conf, $user;
+
+		$actionATM = GETPOST('actionATM');
+		
 		if (in_array('expeditioncard', explode(':', $parameters['context'])))
 		{
-			if($object->statut == 1) { // Validé
+			if(!empty($user->rights->chronopost->sendfile) && $actionATM === 'generate_and_send_chronopost_file' && $object->statut == 1) { // Validé
 				
 				dol_include_once('/chronopost/class/chronopost.class.php');
 				
 				$chronopost = new Chronopost($conf->global->CHRONOPOST_FTP_HOST, $conf->global->CHRONOPOST_FTP_LOGIN, $conf->global->CHRONOPOST_FTP_PASSWORD, $conf->global->CHRONOPOST_FTP_PORT);
-				
 				$conn = $chronopost->connect();
 				$res = $chronopost->login($conn);
 				
 				if($res > 0) {
 					
-					//$chronopost->generate_file_to_send('expedition_'.date('YmdHis'), $object);
+					$chronopost->generate_file_to_send('expedition_'.$object->id.'_'.date('YmdHis').'.csv', $object);
 					
 				}
 				
 			}
+			
 		}
 
 		if (! $error)
@@ -94,4 +97,34 @@ class Actionschronopost
 			return -1;
 		}
 	}
+
+	function formObjectOptions($parameters, &$object, &$action, $hookmanager) {
+		global $langs, $conf, $user, $db, $bc;
+	
+		$langs->load('hevea@hevea');
+
+		if (in_array('expeditioncard', explode(':', $parameters['context']))) {
+			
+			if(!empty($user->rights->chronopost->sendfile) && empty($action) || $action === 'view') {
+				
+				?>
+				<script type="text/javascript">
+					
+					$(document).ready(function() {
+						
+						$('div.tabsAction').prepend('<a class="butAction" href="<?php print $_SERVER['PHP_SELF'].'?id='.GETPOST('id').'&actionATM=generate_and_send_chronopost_file'; ?>"><?php print $langs->trans('ChronopostGenerateAndSendFile'); ?></a>');
+						
+					});
+					
+				</script>
+				<?php
+				
+			}
+			
+		}
+
+		// Always OK
+		return 0;
+	}
+
 }

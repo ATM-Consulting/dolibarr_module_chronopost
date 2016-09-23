@@ -62,12 +62,83 @@ class Chronopost {
 	}
 	
 	function write_file(&$f, &$expedition) {
-
+		
+		$TAddress = $this->get_used_address($expedition);
+		
 		fputcsv($f, array(
-			''
+			substr('', 0, 17) // TODO code destinataire
 			,substr($expedition->thirdparty->nom, 0, 35)
+			,substr($TAddress['address1'], 0, 35)
+			,substr($TAddress['address2'], 0, 35)
+			,substr($TAddress['address3'], 0, 35)
+			,substr($TAddress['zip'], 0, 9)
+			,substr($TAddress['town'], 0, 35)
+			,substr($TAddress['country_code_iso'], 0, 3)
+			,substr('', 0, 70) // TODO instructions de livraison
+			,substr('', 0, 1) // TODO Filler
+			,substr($TAddress['phone'], 0, 35)
+			,substr(!empty($expedition->date_delivery) ? date('Ymd', $expedition->date_delivery) : date('Ymd'), 0, 8)
+			,substr($TAddress['address4'], 0, 35)			
 		)
 		,';');
+		
+	}
+	
+	private function get_used_address(&$expedition) {
+		
+		global $db;
+		
+		dol_include_once('/commande/class/commande.class.php');
+		dol_include_once('/contact/class/contact.class.php');
+		
+		// Récupération de la commande de départ pour checker si elle a un contact livraison commande
+		$commande = new Commande($db);
+		if($commande->fetch($expedition->origin_id)) {
+			
+			$TContact = $commande->liste_contact(-1, 'external', 1, 'SHIPPING');
+			
+			if(!empty($TContact)) { // Adresse du contact livraison
+				
+				$c = new Contact($db);
+				$c->fetch($TContact[0]);
+				$TAddress = $this->get_array_address($c);
+				
+			} else { //Adresse du tiers
+				
+				$expedition->fetch_thirdparty();
+				$soc = &$expedition->thirdparty;
+				$TAddress = $this->get_array_address($soc);
+				
+			}
+
+		} else return -1;
+		
+		return $TAddress;
+		
+	}
+
+	private function get_array_address(&$obj) {
+		
+		global $db;
+		
+		dol_include_once('/core/class/ccountry.class.php');
+		
+		$TAddress = array();
+		
+		$pays = new Ccountry($db);
+		$pays->fetch(empty($obj->country_id) ? 1 : $obj->country_id);
+		
+		$TAddressTMP = explode("\n", $obj->address);
+		$TAddress['address1'] = $TAddressTMP[0];
+		if(!empty($TAddressTMP[1])) $TAddress['address2'] = $TAddressTMP[1];
+		if(!empty($TAddressTMP[2])) $TAddress['address3'] = $TAddressTMP[2];
+		if(!empty($TAddressTMP[3])) $TAddress['address4'] = $TAddressTMP[3];
+		$TAddress['zip'] = $obj->zip;
+		$TAddress['town'] = $obj->town;
+		$TAddress['country_code_iso'] = $pays->code;
+		$TAddress['phone'] = (get_class($obj) === 'Societe') ? $obj->phone : $obj->phone_pro;
+
+		return $TAddress;
 		
 	}
 	
