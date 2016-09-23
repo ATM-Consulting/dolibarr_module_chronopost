@@ -9,8 +9,6 @@ class Chronopost {
 		$this->pass_ftp = $pass_ftp;
 		$this->port_ftp = $port_ftp;
 		
-		$this->TErrors = array();
-		
 	}
 	
 	function connect() {
@@ -39,9 +37,9 @@ class Chronopost {
 	
 	function log_error($err) {
 		
-		$this->TErrors[] = 'Le '.date('d-m-Y').' à '.date('H:i:s').' : '.$err;
-		
-		// TODO écrire les erreurs dans un fichier de log ou dans une table
+		$error = 'Le '.date('d-m-Y').' à '.date('H:i:s').' : '.$err;
+		$f = fopen(dol_buildpath('/chronopost/error.log'), 'a+');
+		fwrite($f, $error."\n");
 		
 	}
 	/**

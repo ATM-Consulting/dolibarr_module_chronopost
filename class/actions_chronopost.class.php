@@ -101,7 +101,7 @@ class Actionschronopost
 	function formObjectOptions($parameters, &$object, &$action, $hookmanager) {
 		global $langs, $conf, $user, $db, $bc;
 	
-		$langs->load('hevea@hevea');
+		$langs->load('chronopost@chronopost');
 
 		if (in_array('expeditioncard', explode(':', $parameters['context']))) {
 			
