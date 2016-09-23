@@ -37,8 +37,10 @@ class Chronopost {
 	
 	function log_error($err) {
 		
+		global $conf;
+		
 		$error = 'Le '.date('d-m-Y').' à '.date('H:i:s').' : '.$err;
-		$f = fopen(dol_buildpath('/chronopost/error.log'), 'a+');
+		$f = fopen($conf->chronopost->multidir_output[$conf->entity].'/error.log', 'a+');
 		fwrite($f, $error."\n");
 		
 	}
