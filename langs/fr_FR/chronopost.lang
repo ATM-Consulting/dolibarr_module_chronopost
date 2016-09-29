@@ -10,4 +10,4 @@ ChronopostFTPHost=Hôte
 ChronopostFTPLogin=Identifiant
 ChronopostFTPPassword=Mot de passe
 ChronopostFTPPort=Port (21 par défaut)
-ChronopostGenerateAndSendFile=Générer et envoyer fichier CSV
+ChronopostGenerateAndSendFile=Créer l'étiquette transporteur
