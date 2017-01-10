@@ -109,6 +109,14 @@ print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
 
 $var=!$var;
 print '<tr '.$bc[$var].'>';
+print '<td>'.$langs->trans("ChronopostOnlyInDocuments").'</td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="right" width="300">';
+print $form->selectyesno('TConst[CHRONOPOST_ONLY_IN_DOCUMENTS]', $conf->global->CHRONOPOST_ONLY_IN_DOCUMENTS, 1);
+print '</td></tr>';
+
+$var=!$var;
+print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("ChronopostFTPHost").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="300">';

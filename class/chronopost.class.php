@@ -2,7 +2,7 @@
 
 class Chronopost {
 	
-	function __construct($server_ftp_adress, $login_ftp, $pass_ftp, $port_ftp) {
+	function __construct($server_ftp_adress='', $login_ftp='', $pass_ftp, $port_ftp='') {
 		
 		$this->server_ftp_adress = $server_ftp_adress;
 		$this->login_ftp = $login_ftp;

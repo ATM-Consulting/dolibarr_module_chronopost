@@ -6,6 +6,7 @@ ATMAbout = Ce module a été développé par <a href="http://www.atm-consulting.
 chronopostSetup = Configuration du module chronopost
 chronopostAbout = A propos du module chronopost
 
+ChronopostOnlyInDocuments=Sauvegarder seulement le fichier dans le répertoire /documents/chronopost/files/ de Dolibarr (les configurations ci-dessous ne seront alors pas prises en compte)
 ChronopostFTPHost=Hôte
 ChronopostFTPLogin=Identifiant
 ChronopostFTPPassword=Mot de passe
