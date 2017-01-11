@@ -66,7 +66,7 @@ class Chronopost {
 		$TAddress = $this->get_used_address($expedition);
 
 		fputcsv($f, array(
-			substr($expedition->ref, 0, 17)
+			substr(str_replace('-', '', $expedition->ref), 0, 17)
 			,substr($expedition->thirdparty->nom, 0, 35)
 			,substr($TAddress['address1'], 0, 35)
 			,substr($TAddress['address2'], 0, 35)
