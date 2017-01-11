@@ -81,7 +81,7 @@ class Chronopost {
 			,substr(!empty($expedition->date_delivery) ? date('Ymd', $expedition->date_delivery) : date('Ymd'), 0, 8)
 			,substr($TAddress['address4'], 0, 35)
 		)
-		,';');
+		,';;');
 
 	}
 

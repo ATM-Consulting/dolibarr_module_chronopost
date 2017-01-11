@@ -81,7 +81,7 @@ class Actionschronopost
 				if($res > 0 || !empty($conf->global->CHRONOPOST_ONLY_IN_DOCUMENTS)) {
 
 					//$res = $chronopost->generate_file_to_send('expedition_'.$object->id.'_'.date('YmdHis').'.csv', $object);
-					$res = $chronopost->generate_file_to_send('Bons de livraison C'.$object->id.'.txt', $object);
+					$res = $chronopost->generate_file_to_send('Bons de livraison C.txt', $object);
 					if(!empty($res)) setEventMessage($langs->trans('ChronopostFileGenerated'));
 				}
 
