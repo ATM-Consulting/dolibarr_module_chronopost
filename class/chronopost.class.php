@@ -66,7 +66,7 @@ class Chronopost {
 		$TAddress = $this->get_used_address($expedition);
 		
 		fputcsv($f, array(
-			substr('', 0, 17) // TODO code destinataire
+			substr($expedition->thirdparty->id, 0, 17)
 			,substr($expedition->thirdparty->nom, 0, 35)
 			,substr($TAddress['address1'], 0, 35)
 			,substr($TAddress['address2'], 0, 35)
@@ -74,7 +74,7 @@ class Chronopost {
 			,substr($TAddress['zip'], 0, 9)
 			,substr($TAddress['town'], 0, 35)
 			,substr($TAddress['country_code_iso'], 0, 3)
-			,substr('', 0, 70) // TODO instructions de livraison
+			,substr(dol_string_nohtmltag($expedition->note_public), 0, 70)
 			,substr('', 0, 1) // TODO Filler
 			,substr($TAddress['phone'], 0, 35)
 			,substr(!empty($expedition->date_delivery) ? date('Ymd', $expedition->date_delivery) : date('Ymd'), 0, 8)
