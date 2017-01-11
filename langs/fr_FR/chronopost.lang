@@ -12,3 +12,4 @@ ChronopostFTPLogin=Identifiant
 ChronopostFTPPassword=Mot de passe
 ChronopostFTPPort=Port (21 par défaut)
 ChronopostGenerateAndSendFile=Créer l'étiquette transporteur
+ChronopostFileGenerated=Fichier généré avec succès

@@ -61,7 +61,7 @@ class Actionschronopost
 	 */
 	function doActions($parameters, &$object, &$action, $hookmanager)
 	{
-		global $conf, $user;
+		global $conf, $user, $langs;
 
 		$actionATM = GETPOST('actionATM');
 		
@@ -80,8 +80,8 @@ class Actionschronopost
 				
 				if($res > 0 || !empty($conf->global->CHRONOPOST_ONLY_IN_DOCUMENTS)) {
 					
-					$chronopost->generate_file_to_send('expedition_'.$object->id.'_'.date('YmdHis').'.csv', $object);
-					
+					$res = $chronopost->generate_file_to_send('expedition_'.$object->id.'_'.date('YmdHis').'.csv', $object);
+					if(!empty($res)) setEventMessage($langs->trans('ChronopostFileGenerated'));
 				}
 				
 			}

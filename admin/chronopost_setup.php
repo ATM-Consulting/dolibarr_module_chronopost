@@ -115,6 +115,8 @@ print '<td align="right" width="300">';
 print $form->selectyesno('TConst[CHRONOPOST_ONLY_IN_DOCUMENTS]', $conf->global->CHRONOPOST_ONLY_IN_DOCUMENTS, 1);
 print '</td></tr>';
 
+/* TODO La partie EDI est à terminer (à tester avec un vrai serveur ftp)
+
 $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("ChronopostFTPHost").'</td>';
@@ -146,6 +148,8 @@ print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="right" width="300">';
 print '<input type="text" name="TConst[CHRONOPOST_FTP_PORT]" value="'.$conf->global->CHRONOPOST_FTP_PORT.'" />';
 print '</td></tr>';
+
+*/
 
 print '</table>';
 
