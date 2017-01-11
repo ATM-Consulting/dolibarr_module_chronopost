@@ -64,28 +64,29 @@ class Actionschronopost
 		global $conf, $user, $langs;
 
 		$actionATM = GETPOST('actionATM');
-		
+
 		if (in_array('expeditioncard', explode(':', $parameters['context'])))
 		{
 			if(!empty($user->rights->chronopost->sendfile) && $actionATM === 'generate_and_send_chronopost_file' && $object->statut == 1) { // Validé
-				
+
 				dol_include_once('/chronopost/class/chronopost.class.php');
-			
+
 				$chronopost = new Chronopost($conf->global->CHRONOPOST_FTP_HOST, $conf->global->CHRONOPOST_FTP_LOGIN, $conf->global->CHRONOPOST_FTP_PASSWORD, $conf->global->CHRONOPOST_FTP_PORT);
-				
+
 				if(empty($conf->global->CHRONOPOST_ONLY_IN_DOCUMENTS)) {
 					$conn = $chronopost->connect();
 					$res = $chronopost->login($conn);
 				}
-				
+
 				if($res > 0 || !empty($conf->global->CHRONOPOST_ONLY_IN_DOCUMENTS)) {
-					
-					$res = $chronopost->generate_file_to_send('expedition_'.$object->id.'_'.date('YmdHis').'.csv', $object);
+
+					//$res = $chronopost->generate_file_to_send('expedition_'.$object->id.'_'.date('YmdHis').'.csv', $object);
+					$res = $chronopost->generate_file_to_send('Bons de livraison C'.$object->id.'.txt', $object);
 					if(!empty($res)) setEventMessage($langs->trans('ChronopostFileGenerated'));
 				}
-				
+
 			}
-			
+
 		}
 
 		if (! $error)
@@ -103,27 +104,27 @@ class Actionschronopost
 
 	function formObjectOptions($parameters, &$object, &$action, $hookmanager) {
 		global $langs, $conf, $user, $db, $bc;
-	
+
 		$langs->load('chronopost@chronopost');
 
 		if (in_array('expeditioncard', explode(':', $parameters['context']))) {
-			
+
 			if(!empty($user->rights->chronopost->sendfile) && !empty($object->statut)) {
-				
+
 				?>
 				<script type="text/javascript">
-					
+
 					$(document).ready(function() {
-						
+
 						$('div.tabsAction').prepend('<a class="butAction" href="<?php print $_SERVER['PHP_SELF'].'?id='.GETPOST('id').'&actionATM=generate_and_send_chronopost_file'; ?>"><?php print $langs->trans('ChronopostGenerateAndSendFile'); ?></a>');
-						
+
 					});
-					
+
 				</script>
 				<?php
-				
+
 			}
-			
+
 		}
 
 		// Always OK
