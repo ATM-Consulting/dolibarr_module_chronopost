@@ -245,15 +245,22 @@ class modchronopost extends DolibarrModules
 	 */
 	function init($options='')
 	{
+		global $db;
+		
 		$sql = array();
 		
 		define('INC_FROM_DOLIBARR',true);
 
+		require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 		dol_include_once('/chronopost/config.php');
 		dol_include_once('/chronopost/script/create-maj-base.php');
 
 		$result=$this->_load_tables('/chronopost/sql/');
-
+		
+		$e = new ExtraFields($db);
+		$e->addExtraField('code_relais_colis', 'Code / Ville relais colis', 'varchar', '', '255', 'expedition');
+		$e->addExtraField('code_relais_colis', 'Code / Ville relais colis', 'varchar', '', '255', 'commande');
+		
 		return $this->_init($sql, $options);
 	}
 
