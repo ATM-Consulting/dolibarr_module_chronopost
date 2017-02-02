@@ -81,8 +81,19 @@ class Actionschronopost
 				if($res > 0 || !empty($conf->global->CHRONOPOST_ONLY_IN_DOCUMENTS)) {
 
 					//$res = $chronopost->generate_file_to_send('expedition_'.$object->id.'_'.date('YmdHis').'.csv', $object);
-					$res = $chronopost->generate_file_to_send('Bons de livraison C.txt', $object);
-					if(!empty($res)) setEventMessage($langs->trans('ChronopostFileGenerated'));
+					if(empty($object->array_options['options_code_relais_colis'])) {
+						$fname = 'Bons de livraison C.txt';
+						$res = $chronopost->generate_file_to_send($fname, $object);
+					}
+					else {
+						$fname = 'Bons de livraison R.txt';
+						$res = $chronopost->generate_file_to_send($fname, $object, true);
+					}
+					
+					if(!empty($res)) {
+						chmod(DOL_DATA_ROOT . '/chronopost/files/'.$fname, 0777);
+						setEventMessage($langs->trans('ChronopostFileGenerated'));
+					}
 				}
 
 			}

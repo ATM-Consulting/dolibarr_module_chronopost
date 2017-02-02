@@ -46,34 +46,39 @@ class Chronopost {
 	}
 	/**
 	 * Crée le fichier à envoyer dans le répertoire /document/chronopost/files
+	 * @param $filename   str 		le nom du fichier
+	 * @param $expedition object	l'objet expédition
+	 * @param $relais	  boolean	type de fichier attendu (false pour standard et true pour relais colis)
 	 */
-	function generate_file_to_send($filename, &$expedition) {
+	function generate_file_to_send($filename, &$expedition, $relais=false) {
 		global $conf;
 
 		$file_dir = $conf->chronopost->multidir_output[$conf->entity].'/files/';
 		$fname = $file_dir.$filename;
 
 		$f = fopen($fname, 'w+');
-		$this->write_file($f, $expedition);
+		$this->write_file($f, $expedition, $relais);
 		fclose($f);
 
 		return $f;
 
 	}
 
-	function write_file(&$f, &$expedition) {
+	function write_file(&$f, &$expedition, $relais) {
 
 		$TAddress = $this->get_used_address($expedition);
-
+		
+		$code_relais_colis = $expedition->array_options['options_code_relais_colis'];
+		
 		fputcsv($f, array(
 			substr(str_replace('-', '', $expedition->ref), 0, 17)
 			,substr($expedition->thirdparty->nom, 0, 35)
-			,substr($TAddress['address1'], 0, 35)
+			,substr($relais ? $TAddress['email'] : $TAddress['address1'], 0, 35)
 			//,substr($TAddress['address2'], 0, 35)
 				,substr('1', 0, 35)
-			,substr($TAddress['address3'], 0, 35)
+			,substr($relais ? $code_relais_colis : $TAddress['address3'], 0, 35)
 			,substr($TAddress['zip'], 0, 9)
-			,substr($TAddress['town'], 0, 35)
+			,substr($relais ? $code_relais_colis : $TAddress['town'], 0, 35)
 			,substr($TAddress['country_code_iso'], 0, 3)
 			,substr(dol_string_nohtmltag($expedition->note_public), 0, 70)
 			,substr('', 0, 1) // TODO Filler
@@ -138,6 +143,7 @@ class Chronopost {
 		$TAddress['town'] = $obj->town;
 		$TAddress['country_code_iso'] = $pays->code;
 		$TAddress['phone'] = (get_class($obj) === 'Societe') ? $obj->phone : $obj->phone_pro;
+		$TAddress['email'] = $obj->email;
 
 		return $TAddress;
 
