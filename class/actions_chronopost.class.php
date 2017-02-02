@@ -61,12 +61,22 @@ class Actionschronopost
 	 */
 	function doActions($parameters, &$object, &$action, $hookmanager)
 	{
-		global $conf, $user, $langs;
+		global $db, $conf, $user, $langs;
 
 		$actionATM = GETPOST('actionATM');
 
 		if (in_array('expeditioncard', explode(':', $parameters['context'])))
 		{
+			// On préremplit le code relais de l'expédition avec celui présent sur la commande si existant
+			$originid = GETPOST('origin_id');
+			if($action === 'create' && !empty($originid)) {
+				require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+				$com = new Commande($db);
+				$com->fetch($originid);
+				$code_relais_colis = $com->array_options['options_code_relais_colis'];
+				if(!empty($code_relais_colis)) $_POST['options_code_relais_colis'] = $code_relais_colis;
+			}
+			
 			if(!empty($user->rights->chronopost->sendfile) && $actionATM === 'generate_and_send_chronopost_file' && $object->statut == 1) { // Validé
 
 				dol_include_once('/chronopost/class/chronopost.class.php');
