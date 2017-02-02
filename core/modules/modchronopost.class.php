@@ -258,8 +258,8 @@ class modchronopost extends DolibarrModules
 		$result=$this->_load_tables('/chronopost/sql/');
 		
 		$e = new ExtraFields($db);
-		$e->addExtraField('code_relais_colis', 'Code / Ville relais colis', 'varchar', '', '255', 'expedition');
-		$e->addExtraField('code_relais_colis', 'Code / Ville relais colis', 'varchar', '', '255', 'commande');
+		$e->addExtraField('code_relais_colis', 'Code / Ville relais colis', 'varchar', '', '255', 'expedition', 0, 0, '', 0, 1);
+		$e->addExtraField('code_relais_colis', 'Code / Ville relais colis', 'varchar', '', '255', 'commande', 0, 0, '', 0, 1);
 		
 		return $this->_init($sql, $options);
 	}
